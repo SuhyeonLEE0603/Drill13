@@ -139,6 +139,8 @@ class Zombie:
         if self.distance_less_than(play_mode.boy.x, play_mode.boy.y, self.x, self.y, r):
             return BehaviorTree.SUCCESS
         elif self.distance_more_than(play_mode.boy.x, play_mode.boy.y, self.x, self.y, r):
+            return BehaviorTree.FAIL
+        else:
             return BehaviorTree.RUNNING
 
     def build_behavior_tree(self):
