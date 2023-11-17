@@ -86,6 +86,10 @@ class Zombie:
         distance2 = (x1 - x2) ** 2 + (y1 - y2) ** 2
         return distance2 < (r * PIXEL_PER_METER) ** 2
 
+    def distance_more_than(self, x1, y1, x2, y2, r):
+        distance2 = (x1 - x2) ** 2 + (y1 - y2) ** 2
+        return distance2 > (r * PIXEL_PER_METER) ** 2
+
     def move_slightly_to(self, tx, ty):
         self.dir = math.atan2(ty - self.y, tx - self.x)
         self.speed = RUN_SPEED_PPS
@@ -134,7 +138,7 @@ class Zombie:
         self.move_slightly_to(1280 - play_mode.boy.x, 1024 - play_mode.boy.y)
         if self.distance_less_than(play_mode.boy.x, play_mode.boy.y, self.x, self.y, r):
             return BehaviorTree.SUCCESS
-        else:
+        elif self.distance_more_than(play_mode.boy.x, play_mode.boy.y, self.x, self.y, r):
             return BehaviorTree.RUNNING
 
     def build_behavior_tree(self):
@@ -157,9 +161,9 @@ class Zombie:
         SEQ_patrol = Sequence('순찰', a5, a2)
 
         c2 = Condition('소년의 볼이 더 적은가?', self.check_ball_count)
+        a6 = Action('소년을 피함', self.run_from_boy)
 
         SEQ_chase_boy = Sequence('소년을 추적', c1, c2, a4)
-
         root = SEL_chase_boy_or_run = Selector('소년이 근처에 있고 볼의 수가 적은가?', SEQ_chase_boy, SEQ_wander)
 
         self.bt = BehaviorTree(root)
