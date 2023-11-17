@@ -129,6 +129,14 @@ class Zombie:
         else:
             return BehaviorTree.FAIL
 
+    def run_from_boy(self, r=0.5):
+        self.state = 'Walk'
+        self.move_slightly_to(1280 - play_mode.boy.x, 1024 - play_mode.boy.y)
+        if self.distance_less_than(play_mode.boy.x, play_mode.boy.y, self.x, self.y, r):
+            return BehaviorTree.SUCCESS
+        else:
+            return BehaviorTree.RUNNING
+
     def build_behavior_tree(self):
         a1 = Action('Set target location', self.set_target_location, 500, 50)  # action node 생성
         a2 = Action('Move to', self.move_to)
